@@ -1,4 +1,9 @@
 from django.db import models
+from django.db.models import Manager, QuerySet
+
+class EquipmentManager(Manager):
+    def get_queryset(self):
+        return QuerySet(self.model, using=self.db).exclude(is_deleted=True)
 
 class EquipmentType(models.Model):
     id = models.AutoField(primary_key=True)
@@ -10,6 +15,16 @@ class EquipmentType(models.Model):
         max_length=50,
         verbose_name="Маска серийного номера"
     )
+    is_deleted = models.BooleanField(default=False)
+
+    def delete(self):
+        if self.is_deleted == False:
+            self.is_deleted = True
+            self.save()
+            return True
+        return False
+    
+    objects = EquipmentManager()
 
     def __str__(self):
         return self.name
@@ -35,6 +50,16 @@ class Equipment(models.Model):
         null=True,
         verbose_name="Примечание"
     )
+    is_deleted = models.BooleanField(default=False)
+
+    def delete(self):
+        if self.is_deleted == False:
+            self.is_deleted = True
+            self.save()
+            return True
+        return False
+
+    objects = EquipmentManager()
 
     class Meta:
         constraints = [
