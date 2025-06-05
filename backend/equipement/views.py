@@ -59,6 +59,19 @@ class EquipementTypeViewSet(viewsets.ModelViewSet):
     serializer_class = EquiepementTypeSerializer
     permission_classes = [IsAuthenticated]
     #pagination_class = EquipmentTypePagination
+    
+    def create(self, request, *args, **kwargs):
+        data = request.data.get('items', request.data)
+        many = isinstance(data, list)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception = True)
+        self.perform_create(serializer=serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
 
 
 class EquipementViewSet(viewsets.ModelViewSet):
@@ -66,3 +79,16 @@ class EquipementViewSet(viewsets.ModelViewSet):
     serializer_class = EquipementSerializer
     permission_classes = [IsAuthenticated]
     #pagination_class = EquipmentPagination
+    
+    def create(self, request, *args, **kwargs):
+        data = request.data.get('items', request.data)
+        many = isinstance(data, list)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception = True)
+        self.perform_create(serializer=serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
