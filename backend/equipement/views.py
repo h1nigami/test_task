@@ -8,6 +8,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import PageNumberPagination
+from .filters import EquipmentFilter, EquipmentTypeFilter
+from django_filters import rest_framework as filters
+from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
@@ -58,6 +62,10 @@ class EquipementTypeViewSet(viewsets.ModelViewSet):
     queryset = EquipmentType.objects.all()
     serializer_class = EquiepementTypeSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = EquipmentTypeFilter
+    parser_classes = [JSONParser]
+    renderer_classes = [JSONRenderer]
     #pagination_class = EquipmentTypePagination
     
     def create(self, request, *args, **kwargs):
@@ -78,6 +86,10 @@ class EquipementViewSet(viewsets.ModelViewSet):
     queryset = Equipment.objects.all()
     serializer_class = EquipementSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = EquipmentFilter
+    parser_classes = [JSONParser]
+    renderer_classes = [JSONRenderer]
     #pagination_class = EquipmentPagination
     
     def create(self, request, *args, **kwargs):
