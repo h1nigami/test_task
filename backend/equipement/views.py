@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.pagination import PageNumberPagination
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
@@ -42,14 +43,26 @@ class LoginView(APIView):
             }, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+#Кастомный классы пагинации
+class EquipmentTypePagination(PageNumberPagination):
+    page_size = 1
+    page_size_query_param = 'page_size'
+    max_page_size = 10000
+
+class EquipmentPagination(PageNumberPagination):
+    page_size = 1
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
 
 class EquipementTypeViewSet(viewsets.ModelViewSet):
     queryset = EquipmentType.objects.all()
     serializer_class = EquiepementTypeSerializer
     permission_classes = [IsAuthenticated]
+    #pagination_class = EquipmentTypePagination
+
 
 class EquipementViewSet(viewsets.ModelViewSet):
     queryset = Equipment.objects.all()
     serializer_class = EquipementSerializer
     permission_classes = [IsAuthenticated]
-
+    #pagination_class = EquipmentPagination
